@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -7,46 +8,92 @@
 
 return [
     'system' => 'System',
-    'user.manager' => 'Users Manager',
-    'user.resource.user' => 'User',
-    'user.resource.user.title' => 'Users',
-    'user.resource.form.name' => 'Name',
-    'user.resource.form.email' => 'Email',
-    'user.resource.form.mobile' => 'Mobile',
-    'user.resource.form.role' => 'Role',
-    'user.resource.form.password' => 'Password',
-    'user.resource.form.confirm.password' => 'Confirm Password',
-    'user.resource.form.active' => 'Active',
-    'user.resource.form.profile.image' => 'Profile Image',
-    'user.resource.table.image' => 'Image',
-    'user.resource.table.online' => 'Online',
-    'user.resource.table.verified' => 'Verified',
-    'user.resource.table.created.at' => 'Created At',
-    'user.resource.table.updated.at' => 'Updated At',
-    'user.resource.table.deleted.at' => 'Deleted At',
-    'user.resource.table.created.by' => 'Created By',
-    'user.resource.table.updated.by' => 'Updated By',
-    'user.resource.table.deleted.by' => 'Deleted By',
-    'user.resource.table.action.edit.profile' => 'Edit Profile',
-    'role.resource.role' => 'Role',
-    'role.resource.role.title' => 'Roles',
-    'role.resource.form.name' => 'Role',
-    'role.resource.form.identifier' => 'Identifier',
-    'role.resource.form.all.permission' => 'All Permissions',
-    'role.resource.form.is.active' => 'Is Active',
-    'role.resource.form.permissions' => 'Permissions',
-    'role.resource.table.created.at' => 'Created At',
-    'role.resource.table.updated.at' => 'Updated At',
-    'permission.resource.permission' => 'Permission',
-    'permission.resource.permission.title' => 'Permissions',
-    'permission.resource.form.name' => 'Name',
-    'permission.resource.form.identifier' => 'Identifier',
-    'permission.resource.form.children' => 'Children',
-    'permission.resource.form.route' => 'Route',
-    'permission.resource.form.status' => 'Status',
-    'permission.resource.table.created.at' => 'Created At',
-    'permission.resource.table.updated.at' => 'Updated At',
-    'have-access-page' => 'You don\'t have permission to access this page.',
-    'is.active' => 'Your account is not active now.',
-    'unique-route' => 'There no :attribute exist with this :value'
+    'user' => [
+        'manager' => 'Users Manager',
+        'resource' => [
+            'user' => 'User',
+            'form' => [
+                'name' => 'Name',
+                'email' => 'Email',
+                'mobile' => 'Mobile',
+                'role' => 'Role',
+                'password' => 'Password',
+                'confirm-password' => 'Confirm Password',
+                'active' => 'Active',
+                'profile-image' => 'Profile Image',
+            ],
+            'table' => [
+                'image' => 'Image',
+                'online' => 'Online',
+                'verified' => 'Verified',
+                'created-at' => 'Created At',
+                'updated-at' => 'Updated At',
+                'deleted-at' => 'Deleted At',
+                'created-by' => 'Created By',
+                'updated-by' => 'Updated By',
+                'deleted-by' => 'Deleted By',
+                'actions' => [
+                    'edit-profile' => 'Edit Profile',
+                ],
+            ],
+        ],
+        'validation' => [
+            'have-access-page' => 'You don\'t have permission to access this page.',
+            'is-active' => 'Your account is not active now.',
+        ],
+    ],
+    'role' => [
+        'resource' => [
+            'role' => 'Role',
+            'form' => [
+                'name' => 'Role',
+                'identifier' => 'Identifier',
+                'all-permission' => 'All Permissions',
+                'is-active' => 'Is Active',
+                'permissions' => 'Permissions',
+            ],
+            'table' => [
+                'created-at' => 'Created At',
+                'updated-at' => 'Updated At',
+            ],
+        ],
+    ],
+    'permission' => [
+        'resource' => [
+            'permission' => 'Permission',
+            'form' => [
+                'name' => 'Name',
+                'identifier' => 'Identifier',
+                'panel-ids' => 'Panel',
+                'children' => 'Children',
+                'route' => 'Route',
+                'status' => 'Status',
+            ],
+            'table' => [
+                'created-at' => 'Created At',
+                'updated-at' => 'Updated At',
+            ],
+        ],
+        'validation' => [
+            'unique-route' => 'There no :attribute exist with this :value',
+        ],
+        'console' => [
+            'sync-permissions' => 'Syncing permission: :identifier',
+            'sync-permission-invalid-data-format' => 'Invalid permission format. Permission: :permission',
+        ],
+        'import' => [
+            'completed' => 'Your permission import has completed and :successful_rows :row imported.',
+            'failed' => ' :failedRowsCount :row failed to import.',
+            'helper-text' => [
+                'identifier' => 'This will be used to identify the permission in the database. It must be unique.',
+                'panel-ids' => 'There should be at least one panel identifier that matches this value, multiple values should be separated by commas',
+                'route' => 'There should be at least one route name that matches this value or null value',
+                'parent' => 'The parent permission identifier',
+            ],
+        ],
+        'export' => [
+            'completed' => 'Your permission export has completed and :successful_rows :row exported.',
+            'failed' => ' :failedRowsCount :row failed to export.',
+        ],
+    ],
 ];

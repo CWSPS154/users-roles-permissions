@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -18,47 +19,36 @@ class UserManager extends Cluster
 {
     public const DEFAULT_DATETIME_FORMAT = 'M-d-Y h:i:s A';
 
-    public function getLayout(): string
-    {
-        if (config('filament-users-roles-permissions.user_manager.layout')) {
-            return config('filament-users-roles-permissions.user_manager.layout');
-        }
-        return parent::getLayout();
-    }
-
     public static function getNavigationLabel(): string
     {
-        return __(config('filament-users-roles-permissions.user_manager.navigation.label'));
+        return __('filament-users-roles-permissions::users-roles-permissions.user.manager');
     }
 
-    /**
-     * @return string|null
-     */
     public static function getClusterBreadcrumb(): ?string
     {
-        return __(config('filament-users-roles-permissions.user_manager.navigation.title'));
+        return __('filament-users-roles-permissions::users-roles-permissions.user.manager');
     }
 
     public static function getNavigationIcon(): string|Htmlable|null
     {
-        return config('filament-users-roles-permissions.user_manager.navigation.icon');
+        return 'heroicon-o-user-group';
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __(config('filament-users-roles-permissions.user_manager.navigation.group'));
+        return __('filament-users-roles-permissions::users-roles-permissions.system');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return config('filament-users-roles-permissions.user_manager.sort');
+        return 100;
     }
 
-    public static function checkAccess(string $method, Model $record = null): bool
+    public static function checkAccess(string $method, ?Model $record = null): bool
     {
         $plugin = Filament::getCurrentPanel()?->getPlugin(FilamentUsersRolesPermissionsServiceProvider::$name);
         $access = $plugin->$method();
-        if (!empty($access) && is_array($access) && isset($access['ability'], $access['arguments'])) {
+        if (! empty($access) && is_array($access) && isset($access['ability'], $access['arguments'])) {
             return Gate::allows($access['ability'], $access['arguments']);
         }
 

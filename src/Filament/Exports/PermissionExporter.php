@@ -1,16 +1,18 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Exports;
+namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Exports;
 
 use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 
 class PermissionExporter extends Exporter
@@ -23,18 +25,25 @@ class PermissionExporter extends Exporter
             ExportColumn::make('id'),
             ExportColumn::make('name'),
             ExportColumn::make('identifier'),
+            ExportColumn::make('panel_ids'),
             ExportColumn::make('route'),
-            ExportColumn::make('parent_id'),
-            ExportColumn::make('status')
+            ExportColumn::make('parent.identifier'),
+            ExportColumn::make('status'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your permission export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = __('filament-users-roles-permissions::users-roles-permissions.permission.export.completed', [
+            'successful_rows' => number_format($export->successful_rows),
+            'row' => str('row')->plural($export->successful_rows),
+        ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= __('filament-users-roles-permissions::users-roles-permissions.permission.export.failed', [
+                'failed_rows' => number_format($failedRowsCount),
+                'row' => str('row')->plural($failedRowsCount),
+            ]);
         }
 
         return $body;
@@ -42,6 +51,6 @@ class PermissionExporter extends Exporter
 
     public static function modifyQuery(Builder $query): Builder
     {
-        return Permission::where('status', true);
+        return Permission::with('parent')->whereJsonContains('panel_ids', Filament::getCurrentPanel()->getId())->where('status', true);
     }
 }

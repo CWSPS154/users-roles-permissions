@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -17,22 +18,19 @@ class IsOnline
 {
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
             $expireAt = now()->addMinutes(2);
-            Cache::put('user-is-online.' . Auth()->id(), true, $expireAt);
+            Cache::put('user-is-online.'.Auth()->id(), true, $expireAt);
             $user = Auth::user();
             $user->stopUserstamping();
             $user->last_seen = now();
             $user->save();
             $user->startUserstamping();
         }
+
         return $next($request);
     }
 }

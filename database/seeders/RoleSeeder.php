@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -18,9 +19,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         Role::updateOrCreate(
+            ['identifier' => Role::ADMIN],
             [
                 'role' => 'Admin',
-                'identifier' => 'admin',
                 'all_permission' => true,
                 'is_active' => true,
             ]

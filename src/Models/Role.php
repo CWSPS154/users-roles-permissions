@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Role extends Model
 {
     use HasUuids;
+
+    public const ADMIN = 'admin';
 
     /**
      * The attributes that are mass assignable.
@@ -36,28 +39,19 @@ class Role extends Model
      */
     protected $casts = [
         'all_permission' => 'boolean',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
     ];
 
-    /**
-     * @return BelongsToMany
-     */
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::Class, 'role_permissions', 'role_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id');
     }
 
-    /**
-     * @return mixed
-     */
     public static function getPermissionOptions(): mixed
     {
         return Permission::where('status', true)->pluck('name', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'role_id', 'id');

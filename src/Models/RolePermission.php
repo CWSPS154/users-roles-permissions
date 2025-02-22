@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -17,6 +18,7 @@ class RolePermission extends Pivot
     protected $table = 'role_permissions';
 
     public $timestamps = false;
+
     /**
      * @var string[]
      */

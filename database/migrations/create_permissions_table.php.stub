@@ -15,7 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('identifier')->unique();
-            $table->string('route')->unique()->nullable();
+            $table->json('panel_ids')->nullable();
+            $table->string('route')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

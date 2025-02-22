@@ -1,7 +1,6 @@
 {
     "name": "cwsps154/filament-users-roles-permissions",
     "description": "Filament User & Roles & Permissions",
-    "version": "0.0.1",
     "keywords": [
         "cwsps154",
         "laravel",
@@ -24,7 +23,7 @@
             "email": "codewithsps154@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
         "php": "^8.2",
@@ -36,7 +35,7 @@
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "spatie/laravel-package-tools": "^1.15.0",
         "erlandmuchasaj/laravel-gzip": "^1.1",
-        "php-ffmpeg/php-ffmpeg": "dev-master"
+        "php-ffmpeg/php-ffmpeg": "^v1.3.1"
     },
     "extra": {
         "laravel": {

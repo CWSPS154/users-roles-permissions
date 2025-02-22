@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -14,6 +15,8 @@ use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resourc
 use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\HaveAccess;
 use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\IsActive;
 use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\IsOnline;
+use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
+use ErlandMuchasaj\LaravelGzip\Middleware\GzipEncodeResponse;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
@@ -22,69 +25,26 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
 {
     use EvaluatesClosures;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canViewAnyUser = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canCreateUser = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canEditUser = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canDeleteUser = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canViewAnyRole = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canCreateRole = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canEditRole = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canDeleteRole = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canViewAnyPermission = true;
 
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canCreatePermission = true;
 
-    /**
-     * @var bool|Closure|array
-     */
-    protected Closure|array|bool $canEditPermission = true;
-
-    /**
-     * @var bool|Closure|array
-     */
-    protected Closure|array|bool $canDeletePermission = true;
-
-    /**
-     * @var bool|Closure|array
-     */
     protected Closure|array|bool $canAccessEditProfile = true;
 
     public function getId(): string
@@ -95,14 +55,16 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->discoverClusters(
-            in: __DIR__ . '/Filament/Clusters',
+            in: __DIR__.'/Filament/Clusters',
             for: 'CWSPS154\\FilamentUsersRolesPermissions\\Filament\\Clusters'
         )->profile(EditProfile::class, false)
-            ->authMiddleware(
+            ->authMiddleware([
+                HaveAccess::class,
+                IsActive::class,
+                IsOnline::class,
+            ])->middleware(
                 [
-                    HaveAccess::class,
-                    IsActive::class,
-                    IsOnline::class,
+                    GzipEncodeResponse::class,
                 ]
             );
     }
@@ -114,7 +76,20 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
 
     public static function make(): static
     {
-        return app(static::class);
+        return app(static::class)
+            ->grantPermissions();
+    }
+
+    public function grantPermissions(): static
+    {
+        foreach (Permission::ALL_PERMISSIONS as $permission => $function) {
+            call_user_func_array(
+                [$this, $function],
+                [FilamentUsersRolesPermissionsServiceProvider::HAVE_ACCESS_GATE, $permission]
+            );
+        }
+
+        return $this;
     }
 
     protected function setAbility(mixed $ability, mixed $arguments = null): array|bool
@@ -123,19 +98,20 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
             return $this->evaluate($ability);
         }
 
-        if (is_string($ability) && !is_null($arguments)) {
+        if (is_string($ability) && ! is_null($arguments)) {
             return [
                 'ability' => $ability,
                 'arguments' => $arguments,
             ];
         }
 
-        return (bool)$ability;
+        return (bool) $ability;
     }
 
     public function canViewAnyUser(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canViewAnyUser = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -147,6 +123,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canCreateUser(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canCreateUser = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -158,6 +135,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canEditUser(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canEditUser = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -169,6 +147,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canDeleteUser(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canDeleteUser = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -180,6 +159,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canViewAnyRole(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canViewAnyRole = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -191,6 +171,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canCreateRole(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canCreateRole = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -202,6 +183,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canEditRole(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canEditRole = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -213,6 +195,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canDeleteRole(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canDeleteRole = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -224,6 +207,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canViewAnyPermission(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canViewAnyPermission = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -235,6 +219,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
     public function canCreatePermission(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canCreatePermission = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 
@@ -243,31 +228,10 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
         return $this->canCreatePermission;
     }
 
-    public function canEditPermission(bool|Closure|string $ability = true, $arguments = null): static
-    {
-        $this->canEditPermission = $this->setAbility($ability, $arguments);
-        return $this;
-    }
-
-    public function getCanEditPermission(): array|bool
-    {
-        return $this->canEditPermission;
-    }
-
-    public function canDeletePermission(bool|Closure|string $ability = true, $arguments = null): static
-    {
-        $this->canDeletePermission = $this->setAbility($ability, $arguments);
-        return $this;
-    }
-
-    public function getCanDeletePermission(): array|bool
-    {
-        return $this->canDeletePermission;
-    }
-
     public function canAccessEditProfile(bool|Closure|string $ability = true, $arguments = null): static
     {
         $this->canAccessEditProfile = $this->setAbility($ability, $arguments);
+
         return $this;
     }
 

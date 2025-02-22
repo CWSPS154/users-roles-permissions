@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -7,24 +8,26 @@
 
 namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\RoleResource\Pages;
 
-use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\RoleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ManageRoles extends ManageRecords
 {
-    protected static string $resource = RoleResource::class;
-
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->slideOver(),
         ];
     }
 
     public function getTitle(): string|Htmlable
     {
-        return __(config('filament-users-roles-permissions.user_manager.role_resource.navigation.title'));
+        return __('filament-users-roles-permissions::users-roles-permissions.role.resource.role');
+    }
+
+    public static function getResource(): string
+    {
+        return static::$resource = config('filament-users-roles-permissions.resource.role');
     }
 }

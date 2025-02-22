@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -9,8 +10,8 @@ namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\R
 
 use App\Models\User;
 use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager;
-use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages\EditProfile;
-use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages\ManageUsers;
+use Filament\Clusters\Cluster;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
@@ -31,7 +32,6 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $cluster = UserManager::class;
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
@@ -54,7 +54,7 @@ class UserResource extends Resource
                     ->unique(User::class, 'mobile', ignoreRecord: true)
                     ->rules(['phone'])
                     ->ipLookup(function () {
-                        return rescue(fn() => Http::get('https://ipinfo.io/json')->json('country'), app()->getLocale(), report: false);
+                        return rescue(fn () => Http::get('https://ipinfo.io/json')->json('country'), app()->getLocale(), report: false);
                     })
                     ->displayNumberFormat(PhoneInputNumberType::NATIONAL),
                 Forms\Components\Select::make('role_id')
@@ -68,23 +68,24 @@ class UserResource extends Resource
                     ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.password'))
                     ->password()
                     ->confirmed()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->dehydrated(fn($state) => filled($state))
-                    ->required(fn(string $context): bool => $context === 'create')
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password_confirmation')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.confirm.password'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.confirm-password'))
                     ->password()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_active')
                     ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.active'))
-                    ->required(),
+                    ->required()
+                    ->default(true),
                 SpatieMediaLibraryFileUpload::make('media')
                     ->collection('profile-images')
                     ->conversion('avatar')
                     ->image()
                     ->maxSize(2048)
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.profile.image'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.profile-image'))
                     ->optimize('webp'),
             ]);
     }
@@ -119,6 +120,7 @@ class UserResource extends Resource
                         if ($model->isOnline()) {
                             return 'heroicon-o-face-smile';
                         }
+
                         return 'heroicon-o-face-frown';
                     })
                     ->boolean(function (Model $model) {
@@ -131,35 +133,36 @@ class UserResource extends Resource
                         if ($model->email_verified_at) {
                             return 'heroicon-o-check';
                         }
+
                         return 'heroicon-o-x-mark';
                     })
                     ->default(false)
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.created.at'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.created-at'))
                     ->dateTime(UserManager::DEFAULT_DATETIME_FORMAT)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.updated.at'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.updated-at'))
                     ->dateTime(UserManager::DEFAULT_DATETIME_FORMAT)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.deleted.at'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.deleted-at'))
                     ->dateTime(UserManager::DEFAULT_DATETIME_FORMAT)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('creator.name')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.created.by'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.created-by'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('editor.name')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.updated.by'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.updated-by'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('destroyer.name')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.deleted.by'))
+                    ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.deleted-by'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -170,22 +173,23 @@ class UserResource extends Resource
             ->actions(
                 ActionGroup::make([
                     Tables\Actions\EditAction::make()->slideOver()->visible(function ($record) {
-                        return !(auth()->id() === $record->id);
+                        return ! (auth()->id() === $record->id);
                     }),
                     Tables\Actions\DeleteAction::make()->visible(function ($record) {
-                        return !(auth()->id() === $record->id);
+                        return ! (auth()->id() === $record->id);
                     }),
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                     Tables\Actions\Action::make('Profile')
-                        ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.action.edit.profile'))
+                        ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.table.actions.edit-profile'))
                         ->icon('heroicon-o-user')
-                        ->url(EditProfile::getUrl())->visible(function ($record) {
+                        ->url(Filament::getProfileUrl())->visible(function ($record) {
                             if (UserManager::checkAccess('getCanEditUser', $record)) {
                                 return auth()->id() === $record->id;
                             }
+
                             return false;
-                        })
+                        }),
                 ])
             )
             ->bulkActions([
@@ -203,10 +207,18 @@ class UserResource extends Resource
             ]);
     }
 
+    /**
+     * @return class-string<Cluster> | null
+     */
+    public static function getCluster(): ?string
+    {
+        return static::$cluster = config('filament-users-roles-permissions.cluster');
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => ManageUsers::route('/'),
+            'index' => config('filament-users-roles-permissions.manager.user')::route('/'),
         ];
     }
 
@@ -236,51 +248,38 @@ class UserResource extends Resource
         return static::getEloquentQuery()->where('deleted_at', null)->count();
     }
 
-    public function getLayout(): string
-    {
-        if (config('filament-users-roles-permissions.user_manager.user_resource.layout')) {
-            return config('filament-users-roles-permissions.user_manager.user_resource.layout');
-        }
-        return parent::getLayout();
-    }
-
     public static function getNavigationLabel(): string
     {
-        return __(config('filament-users-roles-permissions.user_manager.user_resource.navigation.label'));
+        return __('filament-users-roles-permissions::users-roles-permissions.user.resource.user');
     }
 
     public static function getNavigationIcon(): string|Htmlable|null
     {
-        return config('filament-users-roles-permissions.user_manager.user_resource.navigation.icon');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __(config('filament-users-roles-permissions.user_manager.user_resource.navigation.group'));
+        return 'heroicon-o-users';
     }
 
     public static function getNavigationSort(): ?int
     {
-        return config('filament-users-roles-permissions.user_manager.user_resource.navigation.sort');
+        return 1;
     }
 
     public static function canViewAny(): bool
     {
-        return UserManager::checkAccess('getCanViewAnyUser');
+        return static::$cluster::checkAccess('getCanViewAnyUser');
     }
 
     public static function canCreate(): bool
     {
-        return UserManager::checkAccess('getCanCreateUser');
+        return static::$cluster::checkAccess('getCanCreateUser');
     }
 
     public static function canEdit(Model $record): bool
     {
-        return UserManager::checkAccess('getCanEditUser', $record);
+        return static::$cluster::checkAccess('getCanEditUser', $record);
     }
 
     public static function canDelete(Model $record): bool
     {
-        return UserManager::checkAccess('getCanDeleteUser', $record);
+        return static::$cluster::checkAccess('getCanDeleteUser', $record);
     }
 }

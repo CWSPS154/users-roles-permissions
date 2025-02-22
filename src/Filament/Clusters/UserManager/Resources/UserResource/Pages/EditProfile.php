@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -23,6 +24,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
 {
     /**
      * @return array<int | string, string | Form>
+     *
      * @throws Exception
      */
     protected function getForms(): array
@@ -38,20 +40,18 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
                                 $this->getEmailFormComponent(),
                                 $this->getMobileNumberComponent(),
                                 $this->getPasswordFormComponent(),
-                                $this->getPasswordConfirmationFormComponent()
+                                $this->getPasswordConfirmationFormComponent(),
                             ])])
                     ->operation('edit')
                     ->model($this->getUser())
                     ->statePath('data')
-                    ->inlineLabel(!static::isSimple()),
+                    ->inlineLabel(! static::isSimple()),
             ),
         ];
     }
 
     /**
      * Mobile number
-     *
-     * @return PhoneInput
      */
     protected function getMobileNumberComponent(): PhoneInput
     {
@@ -61,15 +61,13 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
             ->unique(User::class, 'mobile', ignoreRecord: true)
             ->rules(['phone'])
             ->ipLookup(function () {
-                return rescue(fn() => Http::get('https://ipinfo.io/json')->json('country'), app()->getLocale(), report: false);
+                return rescue(fn () => Http::get('https://ipinfo.io/json')->json('country'), app()->getLocale(), report: false);
             })
             ->displayNumberFormat(PhoneInputNumberType::NATIONAL);
     }
 
     /**
      * Profile image
-     *
-     * @return SpatieMediaLibraryFileUpload
      */
     protected function profileImageComponent(): SpatieMediaLibraryFileUpload
     {
@@ -78,7 +76,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
             ->conversion('avatar')
             ->image()
             ->maxSize(2048)
-            ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.profile.image'));
+            ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.profile-image'));
     }
 
     public static function canAccess(): bool

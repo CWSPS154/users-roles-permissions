@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright CWSPS154. All rights reserved.
  * @auth CWSPS154
@@ -8,6 +9,7 @@
 namespace CWSPS154\FilamentUsersRolesPermissions\Http\Middleware;
 
 use Closure;
+use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +20,6 @@ class IsActive
 {
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -31,10 +29,15 @@ class IsActive
             Session::flush();
             Notification::make()
                 ->title(__('Error'))
-                ->body(__('filament-users-roles-permissions::users-roles-permissions.is.active'))
+                ->body(__('filament-users-roles-permissions::users-roles-permissions.user.validation.is-active'))
                 ->danger()
                 ->send();
-            return redirect()->route('login');
+            $loginUrl = Filament::getDefaultPanel()->getLoginUrl();
+            if (Filament::getCurrentPanel()->getLoginUrl()) {
+                $loginUrl = Filament::getCurrentPanel()->getLoginUrl();
+            }
+
+            return redirect($loginUrl);
         }
     }
 }
