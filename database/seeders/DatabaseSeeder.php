@@ -6,7 +6,7 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Database\Seeders;
+namespace CWSPS154\UsersRolesPermissions\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 

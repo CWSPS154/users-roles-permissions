@@ -8,16 +8,17 @@
 
 declare(strict_types=1);
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Console\Commands;
+namespace CWSPS154\UsersRolesPermissions\Console\Commands;
 
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
-use CWSPS154\FilamentUsersRolesPermissions\Rules\RouteHas;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Rules\RouteHas;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SyncPermissions extends Command
 {
+    const PERMISSIONS_CONFIG = 'cwsps-permissions.php';
     /**
      * The name and signature of the console command.
      *
@@ -39,22 +40,32 @@ class SyncPermissions extends Command
     {
         $configPaths = $this->getPermissionsConfigPaths();
         if (empty($configPaths)) {
-            $this->error('No permissions.php config files found.');
+            $this->error(
+                __(
+                    'users-roles-permissions::users-roles-permissions.permission.console.sync-permissions-config-not-found',
+                    ['config' => self::PERMISSIONS_CONFIG]
+                )
+            );
 
             return;
         }
         $permissions = [];
         foreach ($configPaths as $path) {
-            $this->info("Loading permissions from: {$path}");
+            $this->info(
+                __(
+                    'users-roles-permissions::users-roles-permissions.permission.console.sync-permissions-config-loading',
+                    ['path' => $path]
+                )
+            );
             $permissions = array_replace_recursive($permissions, require $path);
         }
         if (empty($permissions)) {
-            $this->error('No permissions found in the configuration files.');
+            $this->error(__('users-roles-permissions::users-roles-permissions.permission.console.sync-permissions-empty'));
 
             return;
         }
         $this->syncPermissions($permissions);
-        $this->info('Permissions synchronized successfully.');
+        $this->info(__('users-roles-permissions::users-roles-permissions.permission.console.sync-permissions-completed'));
     }
 
     /**
@@ -63,7 +74,7 @@ class SyncPermissions extends Command
     private function getPermissionsConfigPaths(): array
     {
         $paths = [];
-        $config = 'cwsps-permissions.php';
+        $config = self::PERMISSIONS_CONFIG;
         $projectConfigPath = config_path($config);
         if (file_exists($projectConfigPath)) {
             $paths[] = $projectConfigPath;
@@ -89,7 +100,7 @@ class SyncPermissions extends Command
                 if (is_array($permission) && ! empty(array_intersect_key(array_flip($keys), $permission))) {
                     $this->warn(
                         __(
-                            'filament-users-roles-permissions::users-roles-permissions.permission.console.sync-permissions',
+                            'users-roles-permissions::users-roles-permissions.permission.console.sync-permissions',
                             ['identifier' => $identifier]
                         )
                     );
@@ -139,7 +150,7 @@ class SyncPermissions extends Command
                 } else {
                     throw new \Exception(
                         __(
-                            'filament-users-roles-permissions::users-roles-permissions.permission.console.sync-permission-invalid-data-format',
+                            'users-roles-permissions::users-roles-permissions.permission.console.sync-permission-invalid-data-format',
                             ['permission' => json_encode($permission)]
                         )
                     );

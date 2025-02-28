@@ -6,7 +6,7 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Http\Middleware;
+namespace CWSPS154\UsersRolesPermissions\Http\Middleware;
 
 use Closure;
 use Filament\Facades\Filament;
@@ -29,7 +29,7 @@ class IsActive
             Session::flush();
             Notification::make()
                 ->title(__('Error'))
-                ->body(__('filament-users-roles-permissions::users-roles-permissions.user.validation.is-active'))
+                ->body(__('users-roles-permissions::users-roles-permissions.user.validation.is-active'))
                 ->danger()
                 ->send();
             $loginUrl = Filament::getDefaultPanel()->getLoginUrl();

@@ -6,10 +6,10 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources;
+namespace CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-use CWSPS154\FilamentUsersRolesPermissions\Models\Role;
+use CWSPS154\UsersRolesPermissions\Models\Role;
 use Filament\Clusters\Cluster;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -31,20 +31,20 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('role')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.name'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.name'))
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('identifier', Str::slug($state))),
                 Forms\Components\TextInput::make('identifier')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.identifier'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.identifier'))
                     ->required()
                     ->disabled()
                     ->maxLength(255)
                     ->dehydrated()
                     ->unique(Role::class, 'identifier', ignoreRecord: true),
                 Forms\Components\Toggle::make('all_permission')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.all-permission'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.all-permission'))
                     ->default(true)
                     ->live()
                     ->afterStateUpdated(function (Get $get, $state, Forms\Set $set) {
@@ -54,11 +54,11 @@ class RoleResource extends Resource
                     })
                     ->required(),
                 Forms\Components\Toggle::make('is_active')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.is-active'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.is-active'))
                     ->required()
                     ->default(true),
                 SelectTree::make('permission_id')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.permissions'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.permissions'))
                     ->relationship('permissions', 'permission_with_panel_ids', 'parent_id', function ($query) {
                         return $query->where('status', true);
                     }, function ($query) {
@@ -72,7 +72,8 @@ class RoleResource extends Resource
                     })
                     ->searchable()
                     ->defaultOpenLevel(2)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->direction('down'),
             ]);
     }
 
@@ -81,30 +82,30 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('role')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.name'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.identifier'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.identifier'))
                     ->searchable(),
                 Tables\Columns\IconColumn::make('all_permission')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.all-permission'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.all-permission'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('permissions.permission_with_panel_ids')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.permissions'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.permissions'))
                     ->default('-')
                     ->badge()
                     ->listWithLineBreaks()
                     ->limitList(),
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.form.is-active'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.form.is-active'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.table.created-at'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.table.created-at'))
                     ->dateTime(static::$cluster::DEFAULT_DATETIME_FORMAT)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('filament-users-roles-permissions::users-roles-permissions.role.resource.table.updated-at'))
+                    ->label(__('users-roles-permissions::users-roles-permissions.role.resource.table.updated-at'))
                     ->dateTime(static::$cluster::DEFAULT_DATETIME_FORMAT)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -132,19 +133,19 @@ class RoleResource extends Resource
      */
     public static function getCluster(): ?string
     {
-        return static::$cluster = config('filament-users-roles-permissions.cluster');
+        return static::$cluster = config('users-roles-permissions.cluster');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => config('filament-users-roles-permissions.manager.role')::route('/'),
+            'index' => config('users-roles-permissions.manager.role')::route('/'),
         ];
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('filament-users-roles-permissions::users-roles-permissions.role.resource.role');
+        return __('users-roles-permissions::users-roles-permissions.role.resource.role');
     }
 
     public static function getNavigationIcon(): string|Htmlable|null

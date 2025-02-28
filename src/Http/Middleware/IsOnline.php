@@ -6,7 +6,7 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Http\Middleware;
+namespace CWSPS154\UsersRolesPermissions\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

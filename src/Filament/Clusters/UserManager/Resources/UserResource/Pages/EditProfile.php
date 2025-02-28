@@ -8,10 +8,10 @@
 
 declare(strict_types=1);
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages;
+namespace CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages;
 
 use App\Models\User;
-use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager;
+use CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager;
 use Exception;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -56,7 +56,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
     protected function getMobileNumberComponent(): PhoneInput
     {
         return PhoneInput::make('mobile')
-            ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.mobile'))
+            ->label(__('users-roles-permissions::users-roles-permissions.user.resource.form.mobile'))
             ->required()
             ->unique(User::class, 'mobile', ignoreRecord: true)
             ->rules(['phone'])
@@ -76,7 +76,7 @@ class EditProfile extends \Filament\Pages\Auth\EditProfile
             ->conversion('avatar')
             ->image()
             ->maxSize(2048)
-            ->label(__('filament-users-roles-permissions::users-roles-permissions.user.resource.form.profile-image'));
+            ->label(__('users-roles-permissions::users-roles-permissions.user.resource.form.profile-image'));
     }
 
     public static function canAccess(): bool

@@ -6,9 +6,9 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Exports;
+namespace CWSPS154\UsersRolesPermissions\Filament\Exports;
 
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -34,13 +34,13 @@ class PermissionExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = __('filament-users-roles-permissions::users-roles-permissions.permission.export.completed', [
+        $body = __('users-roles-permissions::users-roles-permissions.permission.export.completed', [
             'successful_rows' => number_format($export->successful_rows),
             'row' => str('row')->plural($export->successful_rows),
         ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= __('filament-users-roles-permissions::users-roles-permissions.permission.export.failed', [
+            $body .= __('users-roles-permissions::users-roles-permissions.permission.export.failed', [
                 'failed_rows' => number_format($failedRowsCount),
                 'row' => str('row')->plural($failedRowsCount),
             ]);
@@ -51,6 +51,8 @@ class PermissionExporter extends Exporter
 
     public static function modifyQuery(Builder $query): Builder
     {
-        return Permission::with('parent')->whereJsonContains('panel_ids', Filament::getCurrentPanel()->getId())->where('status', true);
+        return Permission::with('parent')
+            ->whereJsonContains('panel_ids', Filament::getCurrentPanel()->getId())
+            ->where('status', true);
     }
 }

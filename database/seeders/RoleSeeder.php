@@ -6,9 +6,9 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Database\Seeders;
+namespace CWSPS154\UsersRolesPermissions\Database\Seeders;
 
-use CWSPS154\FilamentUsersRolesPermissions\Models\Role;
+use CWSPS154\UsersRolesPermissions\Models\Role;
 use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder

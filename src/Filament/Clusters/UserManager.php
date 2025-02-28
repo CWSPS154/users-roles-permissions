@@ -6,9 +6,9 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters;
+namespace CWSPS154\UsersRolesPermissions\Filament\Clusters;
 
-use CWSPS154\FilamentUsersRolesPermissions\FilamentUsersRolesPermissionsServiceProvider;
+use CWSPS154\UsersRolesPermissions\UsersRolesPermissionsServiceProvider;
 use Filament\Clusters\Cluster;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Support\Htmlable;
@@ -21,12 +21,12 @@ class UserManager extends Cluster
 
     public static function getNavigationLabel(): string
     {
-        return __('filament-users-roles-permissions::users-roles-permissions.user.manager');
+        return __('users-roles-permissions::users-roles-permissions.user.manager');
     }
 
     public static function getClusterBreadcrumb(): ?string
     {
-        return __('filament-users-roles-permissions::users-roles-permissions.user.manager');
+        return __('users-roles-permissions::users-roles-permissions.user.manager');
     }
 
     public static function getNavigationIcon(): string|Htmlable|null
@@ -36,7 +36,7 @@ class UserManager extends Cluster
 
     public static function getNavigationGroup(): ?string
     {
-        return __('filament-users-roles-permissions::users-roles-permissions.system');
+        return __('users-roles-permissions::users-roles-permissions.system');
     }
 
     public static function getNavigationSort(): ?int
@@ -46,7 +46,7 @@ class UserManager extends Cluster
 
     public static function checkAccess(string $method, ?Model $record = null): bool
     {
-        $plugin = Filament::getCurrentPanel()?->getPlugin(FilamentUsersRolesPermissionsServiceProvider::$name);
+        $plugin = Filament::getCurrentPanel()?->getPlugin(UsersRolesPermissionsServiceProvider::$name);
         $access = $plugin->$method();
         if (! empty($access) && is_array($access) && isset($access['ability'], $access['arguments'])) {
             return Gate::allows($access['ability'], $access['arguments']);

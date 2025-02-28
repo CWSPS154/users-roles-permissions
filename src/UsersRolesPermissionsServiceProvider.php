@@ -8,13 +8,13 @@
 
 declare(strict_types=1);
 
-namespace CWSPS154\FilamentUsersRolesPermissions;
+namespace CWSPS154\UsersRolesPermissions;
 
 use App\Models\User;
-use CWSPS154\FilamentUsersRolesPermissions\Console\Commands\SyncPermissions;
-use CWSPS154\FilamentUsersRolesPermissions\Database\Seeders\DatabaseSeeder;
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
-use CWSPS154\FilamentUsersRolesPermissions\Models\RolePermission;
+use CWSPS154\UsersRolesPermissions\Console\Commands\SyncPermissions;
+use CWSPS154\UsersRolesPermissions\Database\Seeders\DatabaseSeeder;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Models\RolePermission;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
@@ -23,9 +23,9 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 
-class FilamentUsersRolesPermissionsServiceProvider extends PackageServiceProvider
+class UsersRolesPermissionsServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'filament-users-roles-permissions';
+    public static string $name = 'users-roles-permissions';
 
     public const HAVE_ACCESS_GATE = 'have-access';
 
@@ -83,7 +83,7 @@ class FilamentUsersRolesPermissionsServiceProvider extends PackageServiceProvide
             });
     }
 
-    public function boot(): FilamentUsersRolesPermissionsServiceProvider
+    public function boot(): UsersRolesPermissionsServiceProvider
     {
         Gate::define(self::HAVE_ACCESS_GATE, function (User $user, string|array|null $identifiers = null) {
             if ($user->is_admin || ($user->role_id && $user->role->all_permission)) {

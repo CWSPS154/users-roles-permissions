@@ -1,5 +1,5 @@
 {
-    "name": "cwsps154/filament-users-roles-permissions",
+    "name": "cwsps154/users-roles-permissions",
     "description": "Filament User & Roles & Permissions",
     "keywords": [
         "cwsps154",
@@ -13,8 +13,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "CWSPS154\\FilamentUsersRolesPermissions\\": "src/",
-            "CWSPS154\\FilamentUsersRolesPermissions\\Database\\Seeders\\": "database/seeders/"
+            "CWSPS154\\UsersRolesPermissions\\": "src/",
+            "CWSPS154\\UsersRolesPermissions\\Database\\Seeders\\": "database/seeders/"
         }
     },
     "authors": [
@@ -40,7 +40,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "CWSPS154\\FilamentUsersRolesPermissions\\FilamentUsersRolesPermissionsServiceProvider"
+                "CWSPS154\\UsersRolesPermissions\\UsersRolesPermissionsServiceProvider"
             ]
         }
     }

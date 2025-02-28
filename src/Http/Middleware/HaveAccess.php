@@ -6,11 +6,11 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Http\Middleware;
+namespace CWSPS154\UsersRolesPermissions\Http\Middleware;
 
 use Closure;
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
-use CWSPS154\FilamentUsersRolesPermissions\Models\RolePermission;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Models\RolePermission;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
@@ -51,7 +51,7 @@ class HaveAccess
                 Notification::make()
                     ->title(__('Warning'))
                     ->body(
-                        __('filament-users-roles-permissions::users-roles-permissions.user.validation.have-access-page')
+                        __('users-roles-permissions::users-roles-permissions.user.validation.have-access-page')
                     )
                     ->warning()
                     ->send();

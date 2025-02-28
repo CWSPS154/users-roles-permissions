@@ -6,7 +6,7 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages;
+namespace CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
@@ -23,11 +23,11 @@ class ManageUsers extends ManageRecords
 
     public function getTitle(): string|Htmlable
     {
-        return __('filament-users-roles-permissions::users-roles-permissions.user.resource.user');
+        return __('users-roles-permissions::users-roles-permissions.user.resource.user');
     }
 
     public static function getResource(): string
     {
-        return static::$resource = config('filament-users-roles-permissions.resource.user');
+        return static::$resource = config('users-roles-permissions.resource.user');
     }
 }

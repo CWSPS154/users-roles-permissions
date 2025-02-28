@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Models;
+namespace CWSPS154\UsersRolesPermissions\Models;
 
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

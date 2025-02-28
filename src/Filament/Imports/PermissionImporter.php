@@ -6,10 +6,10 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Filament\Imports;
+namespace CWSPS154\UsersRolesPermissions\Filament\Imports;
 
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
-use CWSPS154\FilamentUsersRolesPermissions\Rules\RouteHas;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Rules\RouteHas;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -26,24 +26,24 @@ class PermissionImporter extends Importer
             ImportColumn::make('name')
                 ->requiredMapping(),
             ImportColumn::make('identifier')
-                ->helperText(__('filament-users-roles-permissions::users-roles-permissions.permission.import.helper-text.identifier'))
+                ->helperText(__('users-roles-permissions::users-roles-permissions.permission.import.helper-text.identifier'))
                 ->rules(fn ($record) => [Rule::unique('permissions', 'identifier')->ignore($record->id)])
                 ->castStateUsing(function (string $state): ?string {
                     return Str::slug($state);
                 })
                 ->requiredMapping(),
             ImportColumn::make('panel_ids')
-                ->helperText(__('filament-users-roles-permissions::users-roles-permissions.permission.import.helper-text.panel-ids'))
+                ->helperText(__('users-roles-permissions::users-roles-permissions.permission.import.helper-text.panel-ids'))
                 ->castStateUsing(function (string $state): ?array {
                     return explode(',', preg_replace('/\s*,\s*/', ',', $state));
                 })
                 ->requiredMapping(),
             ImportColumn::make('route')
-                ->helperText(__('filament-users-roles-permissions::users-roles-permissions.permission.import.helper-text.route'))
+                ->helperText(__('users-roles-permissions::users-roles-permissions.permission.import.helper-text.route'))
                 ->rules([new RouteHas])
                 ->requiredMapping(),
             ImportColumn::make('parent')
-                ->helperText(__('filament-users-roles-permissions::users-roles-permissions.permission.import.helper-text.parent'))
+                ->helperText(__('users-roles-permissions::users-roles-permissions.permission.import.helper-text.parent'))
                 ->relationship(resolveUsing: 'identifier')
                 ->requiredMapping(),
             ImportColumn::make('status')
@@ -61,13 +61,13 @@ class PermissionImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = __('filament-users-roles-permissions::users-roles-permissions.permission.import.completed', [
+        $body = __('users-roles-permissions::users-roles-permissions.permission.import.completed', [
             'successful_rows' => number_format($import->successful_rows),
             'row' => str('row')->plural($import->successful_rows),
         ]);
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= __('filament-users-roles-permissions::users-roles-permissions.permission.import.failed', [
+            $body .= __('users-roles-permissions::users-roles-permissions.permission.import.failed', [
                 'failed_rows' => number_format($failedRowsCount),
                 'row' => str('row')->plural($failedRowsCount),
             ]);

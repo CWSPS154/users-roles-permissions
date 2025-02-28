@@ -15,15 +15,15 @@ Add this into your Filament `PannelProvider` class `panel()`
 ```
 $panel->databaseNotifications() //need to see the export files for the permission
     ->databaseTransactions() //optional
-    ->plugins([FilamentUsersRolesPermissionsPlugin::make()]); //required to enable this extension
+    ->plugins([UsersRolesPermissionsPlugin::make()]); //required to enable this extension
 ```
 You can also update UserResource using `setUserResource(UserResource::class)` in the plugin
 ```
-$panel->plugins([FilamentUsersRolesPermissionsPlugin::make()->setUserResource(UserResource::class)]);
+$panel->plugins([UsersRolesPermissionsPlugin::make()->setUserResource(UserResource::class)]);
 ```
-You can create custom `UserResource` and extend `CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource as CoreUserResource`
+You can create custom `UserResource` and extend `CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource as CoreUserResource`
 
-Add the `CWSPS154\FilamentUsersRolesPermissions\Models\HasRole` `trait` in `User` Model
+Add the `CWSPS154\UsersRolesPermissions\Models\HasRole` `trait` in `User` Model
 ```
 use HasRole;
 ```
@@ -82,22 +82,22 @@ php artisan make:queue-batches-table
 php artisan make:notifications-table //ensure these queues and notifications migrates are published
 php artisan vendor:publish --tag=filament-actions-migrations //publish filament import and export migrations
 php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations" //publish spatie media provider
-php artisan filament-users-roles-permissions:install
+php artisan users-roles-permissions:install
 ```
 
 By default, you will get the user which have `email` `admin@gmail.com` & `password` `admin@123`.
 
 Add this in the `\Filament\Panel\Concerns\HasPlugins::plugins()` method
 ```
-FilamentUsersRolesPermissionsPlugin::make(),
+UsersRolesPermissionsPlugin::make(),
 ```
 
 Note: For the user which is_admin user have all permission by default.
 
-You can publish the config file `filament-users-roles-permissions.php`, by running this command
+You can publish the config file `users-roles-permissions.php`, by running this command
 
 ```
-php artisan vendor:publish --tag=filament-users-roles-permissions-config
+php artisan vendor:publish --tag=users-roles-permissions-config
 ```
 you can create additional permissions using `cwsps-permissions.php` config file.
 The updated permissions can sync to database using this command
@@ -131,11 +131,5 @@ Note:run this command to publish lang folder `php artisan lang:publish`
 ![App Screenshot](screenshorts/role-edit.png)
 
 ![App Screenshot](screenshorts/permission-list.png)
-
-![App Screenshot](screenshorts/permission-create.png)
-
-![App Screenshot](screenshorts/permission-edit.png)
-
-![App Screenshot](screenshorts/permission-edit.png)
 
 ![App Screenshot](screenshorts/permission-view.png)

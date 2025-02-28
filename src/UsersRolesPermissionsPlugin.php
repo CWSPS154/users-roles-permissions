@@ -8,20 +8,20 @@
 
 declare(strict_types=1);
 
-namespace CWSPS154\FilamentUsersRolesPermissions;
+namespace CWSPS154\UsersRolesPermissions;
 
 use Closure;
-use CWSPS154\FilamentUsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages\EditProfile;
-use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\HaveAccess;
-use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\IsActive;
-use CWSPS154\FilamentUsersRolesPermissions\Http\Middleware\IsOnline;
-use CWSPS154\FilamentUsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Filament\Clusters\UserManager\Resources\UserResource\Pages\EditProfile;
+use CWSPS154\UsersRolesPermissions\Http\Middleware\HaveAccess;
+use CWSPS154\UsersRolesPermissions\Http\Middleware\IsActive;
+use CWSPS154\UsersRolesPermissions\Http\Middleware\IsOnline;
+use CWSPS154\UsersRolesPermissions\Models\Permission;
 use ErlandMuchasaj\LaravelGzip\Middleware\GzipEncodeResponse;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 
-class FilamentUsersRolesPermissionsPlugin implements Plugin
+class UsersRolesPermissionsPlugin implements Plugin
 {
     use EvaluatesClosures;
 
@@ -49,14 +49,14 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
 
     public function getId(): string
     {
-        return FilamentUsersRolesPermissionsServiceProvider::$name;
+        return UsersRolesPermissionsServiceProvider::$name;
     }
 
     public function register(Panel $panel): void
     {
         $panel->discoverClusters(
             in: __DIR__.'/Filament/Clusters',
-            for: 'CWSPS154\\FilamentUsersRolesPermissions\\Filament\\Clusters'
+            for: 'CWSPS154\\UsersRolesPermissions\\Filament\\Clusters'
         )->profile(EditProfile::class, false)
             ->authMiddleware([
                 HaveAccess::class,
@@ -85,7 +85,7 @@ class FilamentUsersRolesPermissionsPlugin implements Plugin
         foreach (Permission::ALL_PERMISSIONS as $permission => $function) {
             call_user_func_array(
                 [$this, $function],
-                [FilamentUsersRolesPermissionsServiceProvider::HAVE_ACCESS_GATE, $permission]
+                [UsersRolesPermissionsServiceProvider::HAVE_ACCESS_GATE, $permission]
             );
         }
 

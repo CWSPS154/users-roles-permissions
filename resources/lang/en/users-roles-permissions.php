@@ -78,6 +78,10 @@ return [
             'unique-route' => 'There no :attribute exist with this :value',
         ],
         'console' => [
+            'sync-permissions-config-not-found' => 'No :config config files found.',
+            'sync-permissions-config-loading' => 'Loading permissions from: :path',
+            'sync-permissions-empty' => 'No permissions found in the configuration files.',
+            'sync-permissions-completed' => 'Permissions synchronized successfully.',
             'sync-permissions' => 'Syncing permission: :identifier',
             'sync-permission-invalid-data-format' => 'Invalid permission format. Permission: :permission',
         ],

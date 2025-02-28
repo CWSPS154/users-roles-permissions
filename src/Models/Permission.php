@@ -6,7 +6,7 @@
  * @link  https://github.com/CWSPS154
  */
 
-namespace CWSPS154\FilamentUsersRolesPermissions\Models;
+namespace CWSPS154\UsersRolesPermissions\Models;
 
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
