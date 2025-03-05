@@ -20,6 +20,20 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 class RouteHas implements ValidationRule
 {
     /**
+     * @var array
+     */
+    private array $panel_ids;
+
+    /**
+     * @param array|null $panel_ids
+     */
+    public function __construct(
+        array $panel_ids = null
+    ) {
+        $this->panel_ids = $panel_ids;
+    }
+
+    /**
      * Run the validation rule.
      *
      * @param  Closure(string): PotentiallyTranslatedString  $fail
@@ -30,8 +44,9 @@ class RouteHas implements ValidationRule
     {
         if ($value) {
             $newValues = [];
-            foreach (Filament::getPanels() as $panel) {
-                if($panel->hasPlugin(UsersRolesPermissionsServiceProvider::$name)) {
+            foreach ($this->panel_ids as $panel_id) {
+                $panel = Filament::getPanel($panel_id);
+                if ($panel->hasPlugin(UsersRolesPermissionsServiceProvider::$name)) {
                     $newValues[] = Permission::FILAMENT_ROUTE_PREFIX.'.'.$panel->getId().'.'.$value;
                 }
             }
