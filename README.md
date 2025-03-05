@@ -131,5 +131,3 @@ Note:run this command to publish lang folder `php artisan lang:publish`
 ![App Screenshot](screenshorts/role-edit.png)
 
 ![App Screenshot](screenshorts/permission-list.png)
-
-![App Screenshot](screenshorts/permission-view.png)

@@ -19,6 +19,7 @@ use Illuminate\Validation\Rule;
 class SyncPermissions extends Command
 {
     const PERMISSIONS_CONFIG = 'cwsps-permissions.php';
+
     /**
      * The name and signature of the console command.
      *
@@ -83,7 +84,7 @@ class SyncPermissions extends Command
         $configPaths = glob($vendorPath.'/*/*/config/'.$config);
 
         if (! empty($configPaths)) {
-            $paths[] = $configPaths[0];
+            $paths = array_merge($paths, $configPaths);
         }
 
         return $paths;

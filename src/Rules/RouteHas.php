@@ -31,7 +31,7 @@ class RouteHas implements ValidationRule
         if ($value) {
             $newValues = [];
             foreach (Filament::getPanels() as $panel) {
-                if($panel->hasPlugin(UsersRolesPermissionsServiceProvider::$name)) {
+                if ($panel->hasPlugin(UsersRolesPermissionsServiceProvider::$name)) {
                     $newValues[] = Permission::FILAMENT_ROUTE_PREFIX.'.'.$panel->getId().'.'.$value;
                 }
             }

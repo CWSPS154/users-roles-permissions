@@ -78,7 +78,7 @@ class UsersRolesPermissionsServiceProvider extends PackageServiceProvider
                             $command->comment('You can now access the dashboard with email admin@gmail.com & password admin@123');
                         }
                         $command->info('I hope this package will help you to build user management system');
-                        $command->askToStarRepoOnGitHub('CWSPS154/filament-users-roles-permissions');
+                        $command->askToStarRepoOnGitHub('CWSPS154/users-roles-permissions');
                     });
             });
     }
