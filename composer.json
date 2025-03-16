@@ -29,7 +29,7 @@
         "php": "^8.2",
         "codewithdennis/filament-select-tree": "^3.1",
         "filament/filament": "^3.2",
-        "ysfkaya/filament-phone-input": "^2.3",
+        "ysfkaya/filament-phone-input": "^3.1",
         "joshembling/image-optimizer": "^1.4",
         "wildside/userstamps": "^2.4",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
