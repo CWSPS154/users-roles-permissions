@@ -19,16 +19,10 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class RouteHas implements ValidationRule
 {
-    /**
-     * @var array
-     */
     private array $panel_ids;
 
-    /**
-     * @param array|null $panel_ids
-     */
     public function __construct(
-        array $panel_ids = null
+        ?array $panel_ids = null
     ) {
         $this->panel_ids = $panel_ids;
     }

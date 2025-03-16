@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CWSPS154\UsersRolesPermissions\Console\Commands;
 
 use CWSPS154\UsersRolesPermissions\Models\Permission;
+use CWSPS154\UsersRolesPermissions\Rules\IsValidPanel;
 use CWSPS154\UsersRolesPermissions\Rules\RouteHas;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
@@ -66,6 +67,7 @@ class SyncPermissions extends Command
             return;
         }
         $this->syncPermissions($permissions);
+        $this->deleteMissingPermissions($permissions);
         $this->info(__('users-roles-permissions::users-roles-permissions.permission.console.sync-permissions-completed'));
     }
 
@@ -84,7 +86,7 @@ class SyncPermissions extends Command
         $configPaths = glob($vendorPath.'/*/*/config/'.$config);
 
         if (! empty($configPaths)) {
-            $paths = array_merge($paths, $configPaths);
+            $paths = array_reverse(array_merge($paths, $configPaths));
         }
 
         return $paths;
@@ -92,6 +94,8 @@ class SyncPermissions extends Command
 
     /**
      * Sync permissions from config files into the database
+     *
+     * @param  null  $parentId
      */
     private function syncPermissions(array $permissions, $parentId = null): void
     {
@@ -118,7 +122,10 @@ class SyncPermissions extends Command
                     }
                     $permission['parent_id'] = $parentId;
                     if (isset($permission['panel_ids'])) {
-                        $permission['panel_ids'] = array_unique($permission['panel_ids']);
+                        $permission['panel_ids'] = array_unique(
+                            is_array($permission['panel_ids']) ?
+                                $permission['panel_ids'] : explode(',', $permission['panel_ids'])
+                        );
                     }
 
                     $validationRules = [
@@ -127,7 +134,7 @@ class SyncPermissions extends Command
                             'required', 'string', 'max:255',
                             Rule::unique('permissions', 'identifier')->ignore($existingPermission?->id),
                         ],
-                        'panel_ids' => 'sometimes|array',
+                        'panel_ids' => ['sometimes', 'array', new IsValidPanel],
                         'route' => [new RouteHas($permission['panel_ids'])],
                         'status' => 'sometimes|boolean',
                         'parent_id' => [
@@ -160,5 +167,43 @@ class SyncPermissions extends Command
         } catch (\Exception $exception) {
             $this->error($exception->getMessage());
         }
+    }
+
+    /**
+     * Delete permissions from the database that are not present in the configuration files.
+     */
+    private function deleteMissingPermissions(array $permissions): void
+    {
+        $configIdentifiers = $this->extractIdentifiers($permissions);
+        $dbIdentifiers = Permission::pluck('identifier')->toArray();
+
+        $identifiersToDelete = array_diff($dbIdentifiers, $configIdentifiers);
+        if (! empty($identifiersToDelete)) {
+            Permission::whereIn('identifier', $identifiersToDelete)->delete();
+            $this->warn(
+                __('users-roles-permissions::users-roles-permissions.permission.console.sync-permission-deleted-permissions',
+                    ['identifiers' => implode(', ', $identifiersToDelete)])
+            );
+        }
+    }
+
+    /**
+     * Extract identifiers from the permissions array.
+     */
+    private function extractIdentifiers(array $permissions): array
+    {
+        $identifiers = [];
+
+        foreach ($permissions as $identifier => $permission) {
+            if (is_array($permission)) {
+                $identifiers[] = $identifier;
+            }
+
+            if (! empty($permission['children']) && is_array($permission['children'])) {
+                $identifiers = array_merge($identifiers, $this->extractIdentifiers($permission['children']));
+            }
+        }
+
+        return $identifiers;
     }
 }
