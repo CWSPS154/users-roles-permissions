@@ -76,6 +76,7 @@ return [
         ],
         'validation' => [
             'unique-route' => 'There no :attribute exist with this :value',
+            'no-panel-id' => 'No panel found with id: :panel_id',
         ],
         'console' => [
             'sync-permissions-config-not-found' => 'No :config config files found.',
@@ -83,6 +84,7 @@ return [
             'sync-permissions-empty' => 'No permissions found in the configuration files.',
             'sync-permissions-completed' => 'Permissions synchronized successfully.',
             'sync-permissions' => 'Syncing permission: :identifier',
+            'sync-permission-deleted-permissions' => 'Deleted permissions: :identifiers',
             'sync-permission-invalid-data-format' => 'Invalid permission format. Permission: :permission',
         ],
         'import' => [
